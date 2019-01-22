@@ -1,5 +1,6 @@
 <template >
   <div class="main-app-theme">
+    <create-post :bus=bus />
     <div class="container">
       <div class="columns is-multiline">
         <div class="column is-12">
@@ -14,6 +15,15 @@
         </div>
         <div class="column is-4">
           <div class="columns is-multiline column-spacing">
+            <div class="column is-12">
+              <button 
+                class="button is-primary is-rounded is-outlined is-fullwidth" 
+                id="add-note"
+                v-on:click="triggerPopup"
+              >
+                Add New Note
+              </button>
+            </div>
             <div v-for="n in 10" v-bind:key="n" class="column is-12">
               <Card />
             </div>
@@ -37,11 +47,23 @@
 import Vue from 'vue';
 import Card from './components/Card.vue';
 import SearchInput from './components/SearchInput.vue';
+import CreatePost from './components/CreatePost.vue';
 
 export default Vue.extend({
   components: {
     Card,
     SearchInput,
+    CreatePost
+	},
+	data () {
+		return {
+			bus: new Vue(),
+		}
+	},
+  methods: {
+    triggerPopup: function() {
+			this.bus.$emit('trigger-popup');
+    }, 
   },
 });
 </script>
@@ -52,6 +74,9 @@ export default Vue.extend({
 <style>
   .main-app-theme {
     background-color: whitesmoke
+  }
+  #add-note {
+    margin-bottom: -10px;
   }
   .container {
     padding: 20px;
