@@ -17,7 +17,7 @@
           <div class="columns is-multiline column-spacing">
             <div class="column is-12">
               <button 
-                class="button is-primary is-rounded is-outlined is-fullwidth" 
+                class="button is-primary is-rounded  is-fullwidth" 
                 id="add-note"
                 v-on:click="triggerPopup"
               >

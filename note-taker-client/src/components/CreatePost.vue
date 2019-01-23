@@ -1,6 +1,10 @@
 <template>
 	<div class="modal" id="modal-popup">
-		<div class="modal-background"></div>
+		<div 
+			class="modal-background" 
+			v-on:click="popUpHandler"
+		>
+		</div>
 			<div class="modal-card">
 				<header class="modal-card-head">
 					<p class="modal-card-title">Create something will you ?</p>
@@ -14,13 +18,14 @@
 				<section class="modal-card-body">
 					<div class="columns  is-multiline">
 						<div class="column is-4">
-							<dropdown :dropdownItems="dropdownItems"/>
+							<dropdown :bus="bus" v-on:item-select="dropDownItemClick" :dropdownItems="dropdownItems"/>
 						</div>
 						<div class="column is-12">
-							<input type="text" v-model="title" class="input">
+							<input placeholder="Enter title" type="text" v-model="title" class="input">
 						</div>
-						<div class="column is-12">
-							<textarea class="textarea" v-model="content"/>
+						<div class="column is-12" v-if="currentSelectItem === 'Note'">
+							
+							<textarea placeholder="Enter body content" class="textarea" v-model="content"/>
 						</div>
 					</div>
 					
@@ -44,6 +49,7 @@ export default Vue.extend({
 		return {
 			content: '',
 			title:'',
+			currentSelectItem:'Programming Language',
 			dropdownItems: ['Programming Language', 'Note'],
 		};
 	},
@@ -53,21 +59,26 @@ export default Vue.extend({
 	methods: {
 		popUpHandler: function() {
 			const modal = document.getElementById('modal-popup');
-			switch(modal.className){
-				case 'modal':
-					modal.className = 'modal is-active';
-					break;
-				case 'modal is-active':
-					modal.className = 'modal';
-					break;
-				default:
-					break;
-			};
+			if(modal)
+				switch(modal.className){
+					case 'modal':
+						modal.className = 'modal is-active';
+						break;
+					case 'modal is-active':
+						modal.className = 'modal';
+						break;
+					default:
+						break;
+				};
 		},
+		dropDownItemClick: function(currentSelectItem: string) {
+			this.currentSelectItem = currentSelectItem;
+		}
 	},
-	mounted() {
+	created() {
 		this.bus.$on('trigger-popup', this.popUpHandler);
 	},
+
 });
 </script>
 
