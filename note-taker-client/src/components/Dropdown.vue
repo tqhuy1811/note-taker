@@ -56,6 +56,8 @@ export default Vue.extend({
 		},
 		resetDropdown: function() {
 			const dropdown = document.getElementById('dropdown');
+			this.selectedItem = this.dropdownItems[0];
+			this.$emit('item-select',this.dropdownItems[0]);
 			if(dropdown)
 				dropdown.className = 'dropdown';
 		},
