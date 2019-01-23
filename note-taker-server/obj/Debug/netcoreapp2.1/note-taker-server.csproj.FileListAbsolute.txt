@@ -1,0 +1,14 @@
+/Users/justin/Documents/note-taker/note-taker-server/bin/Debug/netcoreapp2.1/note-taker-server.deps.json
+/Users/justin/Documents/note-taker/note-taker-server/bin/Debug/netcoreapp2.1/note-taker-server.runtimeconfig.json
+/Users/justin/Documents/note-taker/note-taker-server/bin/Debug/netcoreapp2.1/note-taker-server.runtimeconfig.dev.json
+/Users/justin/Documents/note-taker/note-taker-server/bin/Debug/netcoreapp2.1/note-taker-server.dll
+/Users/justin/Documents/note-taker/note-taker-server/bin/Debug/netcoreapp2.1/note-taker-server.pdb
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.csprojAssemblyReference.cache
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.csproj.CoreCompileInputs.cache
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.RazorAssemblyInfo.cache
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.RazorAssemblyInfo.cs
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.AssemblyInfoInputs.cache
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.AssemblyInfo.cs
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.RazorTargetAssemblyInfo.cache
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.dll
+/Users/justin/Documents/note-taker/note-taker-server/obj/Debug/netcoreapp2.1/note-taker-server.pdb

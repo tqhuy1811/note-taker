@@ -5,10 +5,17 @@ namespace note_taker_server.Models
 {
 	public class ApplicationContext: DbContext
 	{
-        public ApplicationContext(DbContextOptions<ApplicationContext> options):base(options)
-        { }
+		public ApplicationContext(DbContextOptions<ApplicationContext> options):base(options)
+		{ }
 
-        public DbSet<ProgrammingLanguage> Languages { get; set; }
-        public DbSet<Note> Notes { get; set; }
+		protected override void OnModelCreating(ModelBuilder builder)
+		{
+			builder.Entity<ProgrammingLanguage>().HasMany(l => l.Notes).WithOne();
+		}
+		
+		
+
+		public DbSet<ProgrammingLanguage> Languages { get; set; }
+		public DbSet<Note> Notes { get; set; }
 	}
 }

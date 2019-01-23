@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using note_taker_server.Models;
 
 namespace note_taker_server
@@ -28,7 +29,8 @@ namespace note_taker_server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql);
+            services.AddDbContext<ApplicationContext>(options => 
+                options.UseLazyLoadingProxies().UseNpgsql(Configuration.GetConnectionString("NoteTakingDatabase")));
 
         }
 
