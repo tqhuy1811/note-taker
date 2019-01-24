@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace note_taker_server.Controllers
 {
 	[Route("api/[controller]")]
+	
 	[ApiController]
 	public class ValuesController : ControllerBase
 	{

@@ -1,4 +1,5 @@
 using note_taker_server.Models;
+using System;
 using note_taker_server.IServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace note_taker_server.Services
       }
       catch(DbUpdateConcurrencyException ex)
       {
-        
+        Console.WriteLine(ex.Message);
       }
     }
 

@@ -12,42 +12,48 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Proxies;
+using note_taker_server.IServices;
+using note_taker_server.Services;
 using note_taker_server.Models;
+using note_taker_server.Filters;
 
 namespace note_taker_server
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<ApplicationContext>(options => 
-                options.UseLazyLoadingProxies().UseNpgsql(Configuration.GetConnectionString("NoteTakingDatabase")));
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddMvc(config => {
+				 config.Filters.Add(new ValidateModelFilter());
+			}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			services.AddScoped<IProgrammingLanguageService,ProgrammingLanguageService>();
+			services.AddDbContext<ApplicationContext>(options => 
+				options.UseLazyLoadingProxies().UseNpgsql(Configuration.GetConnectionString("NoteTakingDatabase")));
 
-        }
+		}
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseHsts();
+			}
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
-        }
-    }
+			app.UseHttpsRedirection();
+			app.UseMvc();
+		}
+	}
 }
