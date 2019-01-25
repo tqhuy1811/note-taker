@@ -8,8 +8,10 @@ namespace note_taker_server.Models
 	{
 		[Required(ErrorMessage="Title is required")]
 		public string Title { get; set; }
+
 		[Key]
 		public int LanguageId { get; set; }
+		
 		public virtual List<Note> Notes { get; set; }
 	}
 }

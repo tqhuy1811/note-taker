@@ -13,8 +13,6 @@ namespace note_taker_server.Models
 			builder.Entity<ProgrammingLanguage>().HasMany(l => l.Notes).WithOne();
 		}
 		
-		
-
 		public DbSet<ProgrammingLanguage> Languages { get; set; }
 		public DbSet<Note> Notes { get; set; }
 	}

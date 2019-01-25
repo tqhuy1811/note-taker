@@ -4,6 +4,8 @@ using note_taker_server.IServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using note_taker_server.CustomExceptions;
 
 namespace note_taker_server.Services
 {
@@ -15,12 +17,18 @@ namespace note_taker_server.Services
       _context = context;
     }
 
-    public async Task<ProgrammingLanguage> GetLanguage(int id)
+    public async Task<ActionResult<ProgrammingLanguage>> GetLanguage(int id)
     {
-      return await _context.Languages.FirstAsync(l => l.LanguageId == id);
+
+			var language = await _context.Languages.SingleOrDefaultAsync(l => l.LanguageId == id);
+			if(language != null)
+			{
+				return language;
+			}
+			throw new EntityNotExistException("Item not exist in the database");
     }
 
-    public async Task<List<ProgrammingLanguage>> GetLanguages()
+    public async Task<ActionResult<List<ProgrammingLanguage>>> GetLanguages()
     {
       return await _context.Languages.AsNoTracking().ToListAsync();
     }

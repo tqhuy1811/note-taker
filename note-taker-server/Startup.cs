@@ -32,7 +32,8 @@ namespace note_taker_server
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc(config => {
-				 config.Filters.Add(new ValidateModelFilter());
+				config.Filters.Add(new ValidateModelFilter());
+				config.Filters.Add(new ExceptionFilter());
 			}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 			services.AddScoped<IProgrammingLanguageService,ProgrammingLanguageService>();
 			services.AddDbContext<ApplicationContext>(options => 
