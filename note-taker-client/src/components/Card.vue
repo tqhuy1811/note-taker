@@ -1,28 +1,21 @@
 <template>
-  <div class="card">
-    <header class="card-header">
-      <p class="card-header-title">
-        Component
+  <div  class="card" >
+    <header class="card-header" v-on:click="onCardClick(item.getId())">
+      <p v-if="type === 'language'" class="card-header-title custom-title">
+        {{ this.item.getTitle() }} { {{ this.item.getId() }} }
       </p>
-      <a href="#" class="card-header-icon" aria-label="more options">
-        <span class="icon">
-          <i class="fa fa-angle-down" aria-hidden="true"></i>
-        </span>
-      </a>
+      <p v-else-if="type === 'note'" class="card-header-title">
+        {{ this.item.getContent() }}
+      </p>
+      <div v-if="type === 'language'" class="card-header-icon" aria-label="more options">
+        <button v-on:click.stop="onDeleteClick(item.getId())" class="delete"></button>
+      </div>
     </header>
-    <div class="card-content">
+    <div v-if="item.content" class="card-content">
       <div class="content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-        <a href="#">@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a>
-        <br>
-        <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+        {{ this.item.getTitle() }}
       </div>
     </div>
-    <footer class="card-footer">
-      <a href="#" class="card-footer-item">Save</a>
-      <a href="#" class="card-footer-item">Edit</a>
-      <a href="#" class="card-footer-item">Delete</a>
-    </footer>
   </div>
 </template>
 
@@ -30,7 +23,35 @@
 import Vue from 'vue';
 export default Vue.extend({
   name: 'card-component',
+  props: {
+    item: {
+      type: Object,
+    },
+    type: {
+      type: String
+    },
+    onCardClick: {
+      type: Function,
+      default: function() {
+        return;
+      }
+    },
+    onDeleteClick: {
+      type: Function,
+      default: function() {
+        return;
+      }
+    }
+  },
 });
 </script>
+
+<style>
+  .custom-title {
+    font-size: 30px;
+    text-align: center
+  }
+</style>
+
 
 
