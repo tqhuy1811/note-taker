@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using note_taker_server.DAO;
 using note_taker_server.CustomExceptions;
 
 namespace note_taker_server.Services
@@ -20,7 +21,7 @@ namespace note_taker_server.Services
     public async Task<ActionResult<ProgrammingLanguage>> GetLanguage(int id)
     {
 
-			var language = await _context.Languages.SingleOrDefaultAsync(l => l.LanguageId == id);
+			var language = await _context.Languages.Include(l => l.Notes).SingleOrDefaultAsync(l => l.LanguageId == id);
 			if(language != null)
 			{
 				return language;
@@ -33,19 +34,28 @@ namespace note_taker_server.Services
       return await _context.Languages.AsNoTracking().ToListAsync();
     }
 
+    public async Task<IActionResult> saveNote(NoteDAO noteDAO)
+    {
+      var language = await GetLanguage(noteDAO.LanguageID);
+      language.Value.Notes.Add(new Note{ Title = noteDAO.Title, Content = noteDAO.Content });
+      _context.Languages.Update(language.Value);
+      await _context.SaveChangesAsync();
+      return new StatusCodeResult(201);
+    }
 
-
-    public void saveProgrammingLanguage(ProgrammingLanguage language)
+    public async Task<ActionResult> saveProgrammingLanguage(ProgrammingLanguage language)
     {
       try
       {
-       _context.Languages.Add(language);
+       await _context.Languages.AddAsync(language);
        _context.SaveChanges();
+       return new StatusCodeResult(201);
       }
       catch(DbUpdateConcurrencyException ex)
       {
         Console.WriteLine(ex.Message);
       }
+      return new StatusCodeResult(500);
     }
 
   }

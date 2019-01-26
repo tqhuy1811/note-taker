@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -35,9 +36,10 @@ namespace note_taker_server
 				config.Filters.Add(new ValidateModelFilter());
 				config.Filters.Add(new ExceptionFilter());
 			}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			services.AddCors();
 			services.AddScoped<IProgrammingLanguageService,ProgrammingLanguageService>();
 			services.AddDbContext<ApplicationContext>(options => 
-				options.UseLazyLoadingProxies().UseNpgsql(Configuration.GetConnectionString("NoteTakingDatabase")));
+				options.UseNpgsql(Configuration.GetConnectionString("NoteTakingDatabase")));
 
 		}
 
@@ -47,6 +49,10 @@ namespace note_taker_server
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+				// Include firebase host in production
+				app.UseCors(builder => {
+					builder.WithOrigins(Configuration["LocalHost"]);
+				});
 			}
 			else
 			{

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using note_taker_server.IServices;
 using note_taker_server.Models;
-
 namespace note_taker_server.Controllers
 {
 	[Route("api/[controller]")]
@@ -28,7 +27,11 @@ namespace note_taker_server.Controllers
 			return StatusCode(201);
 		}
 
-
+		[HttpGet]
+		public async Task<ActionResult<List<ProgrammingLanguage>>> GetLanguages ()
+		{
+			return await _lService.GetLanguages();
+		}
 
 		[HttpGet("{id}")]
 		public async Task<ActionResult<ProgrammingLanguage>> GetProgrammingLanguage(int id)

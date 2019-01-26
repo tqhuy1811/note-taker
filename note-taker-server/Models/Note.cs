@@ -5,6 +5,16 @@ namespace note_taker_server.Models
 {
 	public class Note
 	{
+
+		public Note() {}
+
+		public Note(string Title,string Content) 
+		{ 
+			this.Title = Title;
+			this.Content = Content;
+		}
+
+
 		[Key]		
 		public int NoteID { get; set; }
 		[Required(ErrorMessage="Title is required")]

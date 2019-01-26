@@ -10,7 +10,10 @@ namespace note_taker_server.Models
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			builder.Entity<ProgrammingLanguage>().HasMany(l => l.Notes).WithOne();
+			builder.Entity<ProgrammingLanguage>(e => {
+				e.HasIndex(l => l.Title).IsUnique();
+				e.HasMany(l => l.Notes).WithOne();
+			});
 		}
 		
 		public DbSet<ProgrammingLanguage> Languages { get; set; }
