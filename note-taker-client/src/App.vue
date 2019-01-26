@@ -31,8 +31,8 @@
         </div>
         <div v-if="notes.length !== 0" class="column is-8 is-hidden-mobile">
           <div class="columns is-multiline column-spacing">
-            <div v-for="n in 10" v-bind:key="n" class="column is-12">
-              <Card />
+            <div v-for="note in notes" v-bind:key="note.id" class="column is-12">
+              <Card :item="note" type="note" />
             </div>
           </div>
         </div>
@@ -44,6 +44,7 @@
 
 
 <script lang="ts">
+
 import Vue from 'vue';
 import Card from './components/Card.vue';
 import SearchInput from './components/SearchInput.vue';
@@ -59,23 +60,26 @@ export default Vue.extend({
     CreatePost
   },
   mounted() {
-    // axios.get('http://localhost:5000/api/language').then(res => {
-    //   this.languages = res.data.map((el: any) => new Language(el.title, el.languageId ));
-    // }).catch(err => {
-    //   console.log(err);
-    // })
+    axios.get(`${this.$api}/language`).then(res => {
+      this.languages = res.data.map((el: any) => new Language(el.title, el.languageId ));
+    }).catch(err => {
+      console.log(err);
+    })
   },
  
 	data () {
 		return {
       bus: new Vue(),
-      languages:[ new Language("C#", 1)],
-      notes:[]
+      languages:[],
+      notes:[],
 		}
 	},
   methods: {
     onCardClick: function(id: number) {
-      console.log(id);
+      axios.get(`${this.$api}/language/${id}`).then(res => {
+        this.notes = res.data.notes.map((el: any) => new Note(el.title, el.content, el.noteID ));
+      }).catch(err => {
+      })
     },
     onDeleteClick: function(id: number) {
       console.log(id);
