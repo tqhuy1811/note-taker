@@ -1,6 +1,6 @@
 <template >
   <div>
-    <create-post :bus=bus />
+    <create-post :bus=bus @create-post="createPost"  />
     <div class="container">
       <div class="columns is-multiline">
         <div class="column is-12">
@@ -29,12 +29,18 @@
             </div>
           </div>
         </div>
-        <div v-if="notes.length !== 0" class="column is-8 is-hidden-mobile">
+        <div id="scrollable" v-if="notes.length !== 0" class="column is-8 is-hidden-mobile">
           <div class="columns is-multiline column-spacing">
             <div v-for="note in notes" v-bind:key="note.id" class="column is-12">
               <Card :item="note" type="note" />
             </div>
           </div>
+        </div>
+        <div class="column is-4">
+
+        </div>
+        <div v-if="shouldDisplayLoadMore" class="column is-8">
+          <button @click="onLoadMoreClick" class="button is-info">Load more</button>
         </div>
       </div>
     </div>
@@ -61,28 +67,62 @@ export default Vue.extend({
   },
   mounted() {
     axios.get(`${this.$api}/language`).then(res => {
-      this.languages = res.data.map((el: any) => new Language(el.title, el.languageId ));
+      this.languages = res.data.map((el: any) => new Language(el.title, el.languageId));
     }).catch(err => {
-      console.log(err);
+      this.$router.push('/error');
     })
   },
  
 	data () {
 		return {
       bus: new Vue(),
-      languages:[],
-      notes:[],
+      languages:[] as Language[],
+      notes: [] as Note[],
+      currentLanguageId: 0 ,
+      shouldDisplayLoadMore: false
 		}
 	},
   methods: {
     onCardClick: function(id: number) {
-      axios.get(`${this.$api}/language/${id}`).then(res => {
-        this.notes = res.data.notes.map((el: any) => new Note(el.title, el.content, el.noteID ));
+      this.currentLanguageId = id;
+      axios.get(`${this.$api}/note?languageId=${id}`).then(res => {
+        this.notes = res.data.map((el: any) => new Note(el.title, el.content, el.noteID ));
+        if(this.notes.length === 5){
+          this.shouldDisplayLoadMore = true;
+        }else {
+          this.shouldDisplayLoadMore = false; 
+        }
       }).catch(err => {
+        this.$router.push('/error');
       })
     },
     onDeleteClick: function(id: number) {
-      console.log(id);
+      axios.delete(`${this.$api}/language/${id}`).then(res => {
+        this.languages = this.languages.filter(el => el.getId() !== id);
+        this.notes = [] as Note[];
+      }).catch(err => {
+				this.$router.push('/error');
+      })
+    },
+    createPost: function(title: string){
+      this.languages.push(new Language(title, this.languages[this.languages.length - 1].getId() + 1));
+    },
+
+    onLoadMoreClick: function() {
+    
+      axios.get(`${this.$api}/note?languageId=${this.currentLanguageId}&skipItem=${this.notes.length}`).then(res => {
+        if(res.data.length !== 0){
+          res.data.forEach((element: any) => {
+            let note = new Note(element.title, element.content, element.noteID);
+            this.notes.push(note);
+          });
+        }else{
+          this.shouldDisplayLoadMore = false 
+        }
+      }).catch(err => {
+        this.$router.push('/error');
+
+      })
     },
     triggerPopup: function() {
 			this.bus.$emit('trigger-popup');
@@ -95,7 +135,13 @@ export default Vue.extend({
 
 
 <style>
-
+  .is-info {
+    margin-left: 18px
+  }
+  #scrollable {
+    height: 800px;
+    overflow: auto
+  }
   #add-note {
     margin-bottom: -10px;
   }

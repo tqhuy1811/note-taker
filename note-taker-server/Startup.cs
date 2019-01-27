@@ -38,6 +38,7 @@ namespace note_taker_server
 			}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 			services.AddCors();
 			services.AddScoped<IProgrammingLanguageService,ProgrammingLanguageService>();
+			services.AddScoped<INoteService,NoteService>();
 			services.AddDbContext<ApplicationContext>(options => 
 				options.UseNpgsql(Configuration.GetConnectionString("NoteTakingDatabase")));
 
@@ -51,7 +52,7 @@ namespace note_taker_server
 				app.UseDeveloperExceptionPage();
 				// Include firebase host in production
 				app.UseCors(builder => {
-					builder.WithOrigins(Configuration["LocalHost"]);
+					builder.WithOrigins(Configuration["LocalHost"]).AllowAnyMethod().AllowAnyHeader();
 				});
 			}
 			else

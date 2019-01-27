@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using note_taker_server.IServices;
 using note_taker_server.Models;
 namespace note_taker_server.Controllers
@@ -12,11 +13,13 @@ namespace note_taker_server.Controllers
 	public class LanguageController : ControllerBase
 	{
 		private readonly IProgrammingLanguageService _lService;
+		private readonly ApplicationContext _context;
 
 
-		public LanguageController(IProgrammingLanguageService lService)
+		public LanguageController(IProgrammingLanguageService lService,ApplicationContext context)
 		{
 			_lService = lService;
+			_context = context;
 		}
 
 
@@ -28,9 +31,15 @@ namespace note_taker_server.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<List<ProgrammingLanguage>>> GetLanguages ()
+		public async Task<ActionResult<List<ProgrammingLanguage>>> GetLanguages()
 		{
 			return await _lService.GetLanguages();
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteLanguage(int id)
+		{
+			return await _lService.DeleteLanguage(id);
 		}
 
 		[HttpGet("{id}")]

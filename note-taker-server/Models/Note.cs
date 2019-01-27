@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace note_taker_server.Models
 {
@@ -8,10 +10,11 @@ namespace note_taker_server.Models
 
 		public Note() {}
 
-		public Note(string Title,string Content) 
+		public Note(string Title,string Content, int LanguageId) 
 		{ 
 			this.Title = Title;
 			this.Content = Content;
+			this.LanguageId = LanguageId;
 		}
 
 
@@ -21,6 +24,12 @@ namespace note_taker_server.Models
 		public string Title { get; set; }
 		[Required(ErrorMessage="Content is required")]
 		public string Content { get; set; }
+
+		[ForeignKey("LanguageId")]
+		public ProgrammingLanguage language { get; set ;}
+
+
+		public int LanguageId { get; set; }
 
 	}
 }

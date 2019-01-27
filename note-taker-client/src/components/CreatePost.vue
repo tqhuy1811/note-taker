@@ -24,6 +24,9 @@
 							<input placeholder="Enter title" type="text" v-model="title" class="input">
 						</div>
 						<div class="column is-12" v-if="currentSelectItem === 'Note'">
+							<input placeholder="Enter language id" class="input" v-model="languageId"/>
+						</div>
+						<div class="column is-12" v-if="currentSelectItem === 'Note'">
 							
 							<textarea placeholder="Enter body content" class="textarea" v-model="content"/>
 						</div>
@@ -32,7 +35,7 @@
 					<!-- Content ... -->
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success">Save Post</button>
+					<button @click="onSavePost" class="button is-success">Save Post</button>
 				</footer>
 			</div>
 	</div>
@@ -42,6 +45,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Dropdown from './Dropdown.vue';
+import axios from 'axios';
+import ProgrammingLanguage from '@/models/ProgrammingLanguage';
+
 export default Vue.extend({
 	name: 'create-post',
 	props: ['bus'],
@@ -49,6 +55,7 @@ export default Vue.extend({
 		return {
 			content: '',
 			title:'',
+			languageId: '',
 			currentSelectItem:'Programming Language',
 			dropdownItems: ['Programming Language', 'Note'],
 		};
@@ -70,6 +77,26 @@ export default Vue.extend({
 					default:
 						break;
 				};
+		},
+		onSavePost: function() {
+			if(this.currentSelectItem === 'Programming Language') {
+				axios.post(`${this.$api}/language`,{
+					title: this.title
+				}).then(res => {
+					this.$emit('create-post', this.title);
+				}).catch(err => {
+					this.$router.push('/error');
+				})
+			}else{
+				axios.post(`${this.$api}/note`,{
+					title: this.title,
+					content: this.content,
+					languageId: this.languageId
+				}).then(res => {
+				}).catch(err => {
+					this.$router.push('/error');
+				})
+			}
 		},
 		dropDownItemClick: function(currentSelectItem: string) {
 			this.currentSelectItem = currentSelectItem;
