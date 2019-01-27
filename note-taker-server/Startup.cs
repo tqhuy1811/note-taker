@@ -39,6 +39,7 @@ namespace note_taker_server
 			services.AddCors();
 			services.AddScoped<IProgrammingLanguageService,ProgrammingLanguageService>();
 			services.AddScoped<INoteService,NoteService>();
+			services.AddScoped<ISearchService,SearchService>();
 			services.AddDbContext<ApplicationContext>(options => 
 				options.UseNpgsql(Configuration.GetConnectionString("NoteTakingDatabase")));
 
