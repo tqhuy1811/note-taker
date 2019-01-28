@@ -17,6 +17,7 @@ using note_taker_server.IServices;
 using note_taker_server.Services;
 using note_taker_server.Models;
 using note_taker_server.Filters;
+using AspNetCoreRateLimit;
 
 namespace note_taker_server
 {
@@ -32,6 +33,11 @@ namespace note_taker_server
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddOptions();
+			services.AddMemoryCache();
+			services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+			services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+			services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 			services.AddMvc(config => {
 				config.Filters.Add(new ValidateModelFilter());
 				config.Filters.Add(new ExceptionFilter());
@@ -60,7 +66,7 @@ namespace note_taker_server
 			{
 				app.UseHsts();
 			}
-
+			app.UseIpRateLimiting();
 			app.UseHttpsRedirection();
 			app.UseMvc();
 		}
