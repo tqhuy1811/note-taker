@@ -24,10 +24,9 @@ namespace note_taker_server.Controllers
 
 
 		[HttpPost]
-		public IActionResult CreateLanguage([FromBody] ProgrammingLanguage language)
+		public async Task<ActionResult<ProgrammingLanguage>> CreateLanguage([FromBody] ProgrammingLanguage language)
 		{
-			_lService.saveProgrammingLanguage(language);
-			return StatusCode(201);
+			return await _lService.saveProgrammingLanguage(language);
 		}
 
 		[HttpGet]

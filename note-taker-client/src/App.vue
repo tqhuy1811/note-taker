@@ -9,7 +9,7 @@
         <div class="column is-12">
           <div class="columns is-centered">
             <div class="column is-6 column-spacing">
-              <SearchInput />
+              <SearchInput @search-complete="searchComplete" />
             </div>
           </div>
         </div>
@@ -59,6 +59,7 @@ import Language from './models/ProgrammingLanguage';
 import Note from './models/Note';
 import axios from 'axios';
 
+
 export default Vue.extend({
   components: {
     Card,
@@ -66,9 +67,9 @@ export default Vue.extend({
     CreatePost
   },
   mounted() {
-    axios.get(`${this.$api}/language`).then(res => {
+    axios.get(`${this.$api}/language`).then((res: any) => {
       this.languages = res.data.map((el: any) => new Language(el.title, el.languageId));
-    }).catch(err => {
+    }).catch((err: any) => {
       this.$router.push('/error');
     })
   },
@@ -85,33 +86,37 @@ export default Vue.extend({
   methods: {
     onCardClick: function(id: number) {
       this.currentLanguageId = id;
-      axios.get(`${this.$api}/note?languageId=${id}`).then(res => {
+      axios.get(`${this.$api}/note?languageId=${id}`).then((res: any) => {
         this.notes = res.data.map((el: any) => new Note(el.title, el.content, el.noteID ));
         if(this.notes.length === 5){
           this.shouldDisplayLoadMore = true;
         }else {
           this.shouldDisplayLoadMore = false; 
         }
-      }).catch(err => {
+      }).catch((err: any) => {
         this.$router.push('/error');
       })
     },
     onDeleteClick: function(id: number) {
-      axios.delete(`${this.$api}/language/${id}`).then(res => {
+      axios.delete(`${this.$api}/language/${id}`).then((res: any) => {
         this.languages = this.languages.filter(el => el.getId() !== id);
         this.notes = [] as Note[];
-      }).catch(err => {
+      }).catch((err: any) => {
 				this.$router.push('/error');
       })
     },
-    createPost: function(title: string){
-      //TODO: Added 201 Response content 
-      this.languages.push(new Language(title, this.languages[this.languages.length - 1].getId() + 1));
+    searchComplete: function(result: any) {
+      if(result.length !== 0){
+        this.languages = result.map((el: any) => new Language(el.title, el.languageId));
+        this.notes = [];
+      }
+    },
+    createPost: function(language: Language){
+      this.languages.push(language);
     },
 
-    onLoadMoreClick: function() {
-    
-      axios.get(`${this.$api}/note?languageId=${this.currentLanguageId}&skipItem=${this.notes.length}`).then(res => {
+    onLoadMoreClick: function() { 
+      axios.get(`${this.$api}/note?languageId=${this.currentLanguageId}&skipItem=${this.notes.length}`).then((res: any) => {
         if(res.data.length !== 0){
           res.data.forEach((element: any) => {
             let note = new Note(element.title, element.content, element.noteID);
@@ -120,7 +125,7 @@ export default Vue.extend({
         }else{
           this.shouldDisplayLoadMore = false 
         }
-      }).catch(err => {
+      }).catch((err: any) => {
         this.$router.push('/error');
 
       })

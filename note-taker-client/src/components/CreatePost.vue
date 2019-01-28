@@ -82,9 +82,9 @@ export default Vue.extend({
 			if(this.currentSelectItem === 'Programming Language') {
 				axios.post(`${this.$api}/language`,{
 					title: this.title
-				}).then(res => {
-					this.$emit('create-post', this.title);
-				}).catch(err => {
+				}).then((res: any) => {
+					this.$emit('create-post', new ProgrammingLanguage(res.data.title, res.data.languageId));
+				}).catch((err: any) => {
 					this.$router.push('/error');
 				})
 			}else{
@@ -92,8 +92,9 @@ export default Vue.extend({
 					title: this.title,
 					content: this.content,
 					languageId: this.languageId
-				}).then(res => {
-				}).catch(err => {
+				}).then((res: any) => {
+					
+				}).catch((err: any) => {
 					this.$router.push('/error');
 				})
 			}

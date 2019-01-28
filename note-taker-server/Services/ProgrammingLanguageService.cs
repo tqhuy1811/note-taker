@@ -1,12 +1,12 @@
 using note_taker_server.Models;
 using System;
-using System.Linq;
+using note_taker_server.Controllers;
 using note_taker_server.IServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using note_taker_server.DTO;
+
 using note_taker_server.CustomExceptions;
 
 namespace note_taker_server.Services
@@ -22,12 +22,12 @@ namespace note_taker_server.Services
     public async Task<ActionResult<ProgrammingLanguage>> GetLanguage(int id)
     {
 
-			var language = await _context.Languages.SingleOrDefaultAsync(l => l.LanguageId == id);
-			if(language != null)
-			{
-				return language;
-			}
-			throw new EntityNotExistException("Item not exist in the database");
+	    var language = await _context.Languages.SingleOrDefaultAsync(l => l.LanguageId == id);
+	    if(language != null)
+	    {
+		    return language;
+	    }
+	    throw new EntityNotExistException("Item not exist in the database");
     }
 
     public async Task<ActionResult<List<ProgrammingLanguage>>> GetLanguages()
@@ -39,17 +39,17 @@ namespace note_taker_server.Services
     {
       var language = await GetLanguage(languageId);
       _context.Languages.Remove(language.Value);
-      await _context.SaveChangesAsync();
+      _context.SaveChanges();
       return new NoContentResult();
     }
 
-    public async Task<ActionResult> saveProgrammingLanguage(ProgrammingLanguage language)
+    public async Task<ActionResult<ProgrammingLanguage>> saveProgrammingLanguage(ProgrammingLanguage language)
     {
       try
       {
        await _context.Languages.AddAsync(language);
        _context.SaveChanges();
-       return new StatusCodeResult(201);
+       return new CreatedResult(nameof(saveProgrammingLanguage), language);
       }
       catch(DbUpdateConcurrencyException ex)
       {

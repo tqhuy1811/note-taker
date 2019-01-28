@@ -26,7 +26,7 @@ namespace note_taker_server.Services
       var languages = from l in _context.Languages select l;
       if(!string.IsNullOrEmpty(languageName))
       {
-        return await languages.Where(l => l.Title.Contains(languageName)).ToListAsync();
+        return await languages.Where(l => l.Title.ToLower().Contains(languageName.ToLower())).ToListAsync();
       }
       return new List<ProgrammingLanguage>();
     }

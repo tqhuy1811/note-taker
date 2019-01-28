@@ -20,7 +20,8 @@ namespace note_taker_server.Services
     }
     public async Task<IActionResult> CreateNote(NoteDTO noteDTO)
     {
-      _context.Notes.Add(new Note(Title:noteDTO.Title, Content:noteDTO.Content, LanguageId: noteDTO.LanguageID));
+       Note note = new Note(Title: noteDTO.Title, Content: noteDTO.Content, LanguageId: noteDTO.LanguageID);
+      _context.Notes.Add(note);
       await _context.SaveChangesAsync();
       return new StatusCodeResult(201);
     }
